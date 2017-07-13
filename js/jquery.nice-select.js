@@ -73,14 +73,16 @@
         var $option = $(this);
         var display = $option.data('display');
 
-        $dropdown.find('ul').append($('<li></li>')
-          .attr('data-value', $option.val())
-          .attr('data-display', (display || null))
-          .addClass('option' +
-            ($option.is(':selected') ? ' selected' : '') +
-            ($option.is(':disabled') ? ' disabled' : ''))
-          .html($option.text())
-        );
+        if (display === undefined) {
+          $dropdown.find('ul').append($('<li></li>')
+              .attr('data-value', $option.val())
+              .attr('data-display', (display || null))
+              .addClass('option' +
+              ($option.is(':selected') ? ' selected' : '') +
+              ($option.is(':disabled') ? ' disabled' : ''))
+              .html($option.text())
+          );
+        }
       });
     }
 
@@ -127,14 +129,24 @@
     $(document).on('click.nice_select', '.nice-select .option:not(.disabled)', function(event) {
       var $option = $(this);
       var $dropdown = $option.closest('.nice-select');
+      var $select = $dropdown.prev('select');
 
-      $dropdown.find('.selected').removeClass('selected');
-      $option.addClass('selected');
+      if ($select.attr('multiple')) {
+        if ($option.hasClass('selected')) {
+          $option.removeClass('selected');
+        } else {
+          $option.addClass('selected');
+        }
+        $select.children('option[value="' + $option.data('value') + '"]').prop('selected', $option.hasClass('selected'));
+      } else {
+        $dropdown.find('.selected').removeClass('selected');
+        $option.addClass('selected');
 
-      var text = $option.data('display') || $option.text();
-      $dropdown.find('.current').text(text);
+        var text = $option.data('display') || $option.text();
+        $dropdown.find('.current').text(text);
 
-      $dropdown.prev('select').val($option.data('value')).trigger('change');
+        $select.val($option.data('value')).trigger('change');
+      }
     });
 
     // Keyboard events
