@@ -138,6 +138,7 @@
           $option.addClass('selected');
         }
         $select.children('option[value="' + $option.data('value') + '"]').prop('selected', $option.hasClass('selected'));
+        $select.children('option[value="' + $option.data('value') + '"]').trigger('option_change.nice_select');
       } else {
         $dropdown.find('.selected').removeClass('selected');
         $option.addClass('selected');
