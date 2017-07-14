@@ -82,6 +82,16 @@
               ($option.is(':disabled') ? ' disabled' : ''))
               .html($option.text())
           );
+        } else {
+          $dropdown.find('ul').append($('<li></li>')
+              // .attr('data-value', $option.val())
+              .attr('data-display', (display || null))
+              .attr('data-all', 1)
+              .addClass('option' +
+              // ($option.is(':selected') ? ' selected' : '') +
+              ($option.is(':disabled') ? ' disabled' : ''))
+              .html($option.text())
+          );
         }
       });
     }
@@ -136,13 +146,46 @@
       var $select = $dropdown.prev('select');
 
       if ($select.attr('multiple')) {
-        if ($option.hasClass('selected')) {
-          $option.removeClass('selected');
-        } else {
-          $option.addClass('selected');
+        if ($option.data('all') === 1) {
+          $option.parent().children('li').each(function(i) {
+            let $option = $(this);
+            if ($option.hasClass('selected') === false) {
+              $option.addClass('selected');
+              $select.children('option[value="' + $option.data('value') + '"]').
+                  prop('selected', true);
+              $select.children('option[value="' + $option.data('value') + '"]').
+                  trigger('option_change.nice_select');
+            }
+          })
         }
-        $select.children('option[value="' + $option.data('value') + '"]').prop('selected', $option.hasClass('selected'));
-        $select.children('option[value="' + $option.data('value') + '"]').trigger('option_change.nice_select');
+        if ($option.data('all') === 0) {
+          $option.parent().children('li').each(function(i) {
+            let $option = $(this);
+            if ($option.hasClass('selected') === true) {
+              $option.removeClass('selected');
+              $select.children('option[value="' + $option.data('value') + '"]').
+                  prop('selected', false);
+              $select.children('option[value="' + $option.data('value') + '"]').
+                  trigger('option_change.nice_select');
+            }
+          })
+        }
+        if ($option.data('all') === undefined) {
+          if ($option.hasClass('selected')) {
+            $option.removeClass('selected');
+          } else {
+            $option.addClass('selected');
+          }
+          $select.children('option[value="' + $option.data('value') + '"]').prop('selected', $option.hasClass('selected'));
+          $select.children('option[value="' + $option.data('value') + '"]').trigger('option_change.nice_select');
+        } else {
+          if ($option.data('all') === 1) {
+            $option.data('all', 0);
+          } else {
+            $option.data('all', 1);
+          }
+        }
+
       } else {
         $dropdown.find('.selected').removeClass('selected');
         $option.addClass('selected');
