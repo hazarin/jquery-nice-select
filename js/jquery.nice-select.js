@@ -186,7 +186,7 @@
           }
           var $inrevert = $option.text();
           $option.text($option.data('revert') || null);
-          $option.attr('data-revert', $inrevert);
+          $option.data('revert', $inrevert);
         }
 
       } else {
