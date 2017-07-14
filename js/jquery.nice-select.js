@@ -83,12 +83,12 @@
               .html($option.text())
           );
         } else {
+          var $revert = $option.data('revert');
           $dropdown.find('ul').append($('<li></li>')
-              // .attr('data-value', $option.val())
               .attr('data-display', (display || null))
+              .attr('data-revert', $revert)
               .attr('data-all', 1)
               .addClass('option' +
-              // ($option.is(':selected') ? ' selected' : '') +
               ($option.is(':disabled') ? ' disabled' : ''))
               .html($option.text())
           );
@@ -148,8 +148,8 @@
       if ($select.attr('multiple')) {
         if ($option.data('all') === 1) {
           $option.parent().children('li').each(function(i) {
-            let $option = $(this);
-            if ($option.hasClass('selected') === false) {
+            var $option = $(this);
+            if ($option.hasClass('selected') === false && i > 0) {
               $option.addClass('selected');
               $select.children('option[value="' + $option.data('value') + '"]').
                   prop('selected', true);
@@ -160,8 +160,8 @@
         }
         if ($option.data('all') === 0) {
           $option.parent().children('li').each(function(i) {
-            let $option = $(this);
-            if ($option.hasClass('selected') === true) {
+            var $option = $(this);
+            if ($option.hasClass('selected') === true && i > 0) {
               $option.removeClass('selected');
               $select.children('option[value="' + $option.data('value') + '"]').
                   prop('selected', false);
@@ -184,6 +184,9 @@
           } else {
             $option.data('all', 1);
           }
+          var $inrevert = $option.text();
+          $option.text($option.data('revert') || null);
+          $option.attr('data-revert', $inrevert);
         }
 
       } else {
