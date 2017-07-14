@@ -99,6 +99,10 @@
         return;
       }
 
+      if (event.type === 'click' && $dropdown.prev('select').attr('multiple')) {
+        return;
+      }
+
       $('.nice-select').not($dropdown).removeClass('open');
       $dropdown.toggleClass('open');
 
