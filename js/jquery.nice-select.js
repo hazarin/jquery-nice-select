@@ -90,7 +90,7 @@
               .attr('data-all', 1)
               .addClass('option' +
               ($option.is(':disabled') ? ' disabled' : ''))
-              .html($option.text())
+              .html($option.data('text'))
           );
         }
       });
