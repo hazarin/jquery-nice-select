@@ -71,26 +71,27 @@
 
       $options.each(function(i) {
         var $option = $(this);
-        var display = $option.data('display');
+        var $display = $option.data('display');
 
-        if (display === undefined) {
+        if ($display === undefined) {
           $dropdown.find('ul').append($('<li></li>')
               .attr('data-value', $option.val())
-              .attr('data-display', (display || null))
+              .attr('data-display', ($display || null))
               .addClass('option' +
               ($option.is(':selected') ? ' selected' : '') +
               ($option.is(':disabled') ? ' disabled' : ''))
               .html($option.text())
           );
         } else {
+          var $all = $option.parent().children(':not(:selected)').length === 0;
           var $revert = $option.data('revert');
           $dropdown.find('ul').append($('<li></li>')
-              .attr('data-display', (display || null))
-              .attr('data-revert', $revert)
+              .attr('data-display', ($display || null))
+              .attr('data-revert', $all ? $option.data('text'): $revert)
               .attr('data-all', 1)
               .addClass('option' +
               ($option.is(':disabled') ? ' disabled' : ''))
-              .html($option.data('text'))
+              .html($all ? $revert : $option.data('text'))
           );
         }
       });
