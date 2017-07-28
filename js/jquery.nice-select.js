@@ -178,6 +178,15 @@
             $option.addClass('selected');
           }
           $select.children('option[value="' + $option.data('value') + '"]').prop('selected', $option.hasClass('selected'));
+          if ($select.val().length === 1) {
+            var $option_all =  $option.parent().children(':first');
+            if ($option_all.data('all') === 0) {
+              var $inrevert = $option_all.text();
+              $option_all.data('all', 1);
+              $option_all.text($option_all.data('revert') || null);
+              $option_all.data('revert', $inrevert);
+            }
+          }
           $select.children('option[value="' + $option.data('value') + '"]').trigger('option_change.nice_select');
         } else {
           if ($option.data('all') === 1) {
