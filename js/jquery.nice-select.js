@@ -83,15 +83,15 @@
               .html($option.text())
           );
         } else {
-          var $all = $option.parent().children(':not(:selected)').length === 0;
+          var $all = $option.parent().children(':selected').length > 1;
           var $revert = $option.data('revert');
           $dropdown.find('ul').append($('<li></li>')
               .attr('data-display', ($display || null))
-              .attr('data-revert', $all ? $option.data('text'): $revert)
-              .attr('data-all', 1)
+              .attr('data-revert', $revert)
+              .attr('data-all', $all ? 0 : 1)
               .addClass('option' +
               ($option.is(':disabled') ? ' disabled' : ''))
-              .html($all ? $revert : $option.data('text'))
+              .html($option.data('text'))
           );
         }
       });
