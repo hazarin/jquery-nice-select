@@ -64,36 +64,56 @@
       );
 
       var $dropdown = $select.next();
-      var $options = $select.find('option');
+      var $options = $select.children();
       var $selected = $select.find('option:selected');
 
       $dropdown.find('.current').html($selected.data('display') || $selected.text());
 
       $options.each(function(i) {
         var $option = $(this);
-        var $display = $option.data('display');
 
-        if ($display === undefined) {
-          $dropdown.find('ul').append($('<li></li>')
-              .attr('data-value', $option.val())
-              .attr('data-display', ($display || null))
-              .addClass('option' +
-              ($option.is(':selected') ? ' selected' : '') +
-              ($option.is(':disabled') ? ' disabled' : ''))
-              .html($option.text())
-          );
+        if ($option.prop("tagName") == 'OPTGROUP') {
+            var $optgroup = $('<li class="option optgroup"></li>').html($option.attr('label'));
+            $dropdown.find('ul:first').append($optgroup);
+            var $sublist = $('<ul class="list"></ul>');
+            $optgroup.append($sublist);
+            $option.children().each(function(i) {
+              var $suboption = $(this);
+              $sublist.append($('<li></li>')
+                  .attr('data-value', $suboption.val())
+                  .attr('data-display', null)
+                  .addClass('option' +
+                  ($suboption.is(':selected') ? ' selected' : '') +
+                  ($suboption.is(':disabled') ? ' disabled' : ''))
+                  .html($suboption.text())
+              );
+            })
         } else {
-          var $all = $option.parent().children(':selected').length > 1;
-          var $revert = $option.data('revert');
-          $dropdown.find('ul').append($('<li></li>')
-              .attr('data-display', ($display || null))
-              .attr('data-revert', $revert)
-              .attr('data-all', $all ? 0 : 1)
-              .addClass('option' +
-              ($option.is(':disabled') ? ' disabled' : ''))
-              .html($option.data('text'))
-          );
+          var $display = $option.data('display');
+
+          if ($display === undefined) {
+            $dropdown.find('ul:first').append($('<li></li>')
+                .attr('data-value', $option.val())
+                .attr('data-display', ($display || null))
+                .addClass('option' +
+                ($option.is(':selected') ? ' selected' : '') +
+                ($option.is(':disabled') ? ' disabled' : ''))
+                .html($option.text())
+            );
+          } else {
+            var $all = $option.parent().children(':selected').length > 1;
+            var $revert = $option.data('revert');
+            $dropdown.find('ul').append($('<li></li>')
+                .attr('data-display', ($display || null))
+                .attr('data-revert', $revert)
+                .attr('data-all', $all ? 0 : 1)
+                .addClass('option' +
+                ($option.is(':disabled') ? ' disabled' : ''))
+                .html($option.data('text'))
+            );
+          }
         }
+
       });
     }
 
@@ -143,6 +163,9 @@
     // Option click
     $(document).on('click.nice_select', '.nice-select .option:not(.disabled)', function(event) {
       var $option = $(this);
+      if ($option.hasClass("optgroup")) {
+        return;
+      }
       var $dropdown = $option.closest('.nice-select');
       var $select = $dropdown.prev('select');
 
