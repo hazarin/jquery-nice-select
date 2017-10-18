@@ -87,6 +87,7 @@
                   ($suboption.is(':disabled') ? ' disabled' : ''))
                   .html($suboption.text())
               );
+              $suboption.trigger('option_change.nice_select');
             })
         } else {
           var $display = $option.data('display');
@@ -100,6 +101,7 @@
                 ($option.is(':disabled') ? ' disabled' : ''))
                 .html($option.text())
             );
+            $option.trigger('option_change.nice_select');
           } else {
             var $all = $option.parent().children(':selected').length > 1;
             var $revert = $option.data('revert');
@@ -112,7 +114,6 @@
                 .html($option.data('text'))
             );
           }
-          $option.trigger('option_change.nice_select');
         }
 
       });
