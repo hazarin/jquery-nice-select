@@ -112,6 +112,7 @@
                 .html($option.data('text'))
             );
           }
+          $option.trigger('option_change.nice_select');
         }
 
       });
